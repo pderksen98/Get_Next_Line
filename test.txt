@@ -1,11 +1,8 @@
 Hallo mijn naam is Pieter
-De geitjes zijn gemolken
-En in de tussentijd
-gaat het ook wel lekker met de kippetjes
+Ik schrijf nu een test file
+Nu komen er twee new lines aan
 
-B
-C
-D
-E
-F
-G
+
+En nu gaan we weer lekker door
+De vriendelijke groetennn!!
+Jopiee
