@@ -1,8 +1,2 @@
-Hallo mijn naam is Pieter
-Ik schrijf nu een test file
-Nu komen er twee new lines aan
-
-
-En nu gaan we weer lekker door
-De vriendelijke groetennn!!
-Jopiee
+01234
+56789

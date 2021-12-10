@@ -1,51 +1,59 @@
 #include "get_next_line.h"
 
-int	ft_strlen(const char *s)
+//adds buffer to the existing line and returns this newline
+char	*ft_line_add_buf(char *line, char *buf, char *newline, int line_count, int buf_count)
+{
+	int	count;
+	int	count1;
+
+	count = 0;
+	while (count < line_count)
+	{
+		newline[count] = line[count];
+		count++;
+	}
+	count1 = 0;
+	while (count1 < buf_count) //(count1 <= buf_count): If you want to print the newline (\n) aswell
+	{
+		newline[count] = buf[count1];
+		count++;
+		count1++;
+	}
+	newline[count] = '\0';
+	return (newline);
+}
+
+//allocates memmory for the newline, makes the newline and frees the 'old' line
+char	*ft_line_maker(char *line, char *buf, int buf_count)
+{
+	int		line_count;
+	char	*newline;
+
+	line_count = 0;
+	while (line[line_count])
+		line_count++;
+	newline = (char *)malloc((line_count + buf_count + 1) * sizeof(char));
+	if (!newline)
+		return (NULL);
+	newline = (ft_line_add_buf(line, buf, newline, line_count, buf_count));
+	free (line);
+	return (newline);
+}
+
+void	new_buffer(char *buf, int buf_count)
 {
 	int	i;
 
 	i = 0;
-	while (s[i] != '\0')
-		i++;
-	return (i);
-}
-
-
-char	*ft_strchr(const char *s, int c)
-{
-	int	i;
-
-	i = 0;
-	if (c == '\0')
+	while (buf_count < BUFFER_SIZE)
 	{
-		while (s[i] != '\0')
-			i++;
-		return ((char *)s + i);
-	}
-	while (s[i] != '\0')
-	{
-		if ((unsigned char)s[i] == (unsigned char)c)
-			return ((char *)s + i);
+		buf_count++;
+		buf[i] = buf[buf_count];
 		i++;
 	}
-	return (NULL);
-}
-
-char	*ft_strdup(const char *s1)
-{
-	size_t	i;
-	size_t	length;
-	char	*ptr;
-
-	i = 0;
-	length = ft_strlen(s1) + 1;
-	ptr = (char *)malloc(length * sizeof(char));
-	if (ptr == NULL)
-		return (0);
-	while (i < length)
+	while (i < BUFFER_SIZE)
 	{
-		ptr[i] = s1[i];
+		buf[i] = '\0';
 		i++;
 	}
-	return (ptr);
 }
