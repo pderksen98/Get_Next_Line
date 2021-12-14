@@ -1,77 +1,76 @@
 #include "get_next_line.h"
 
-char	*ft_reader(int fd, char *buf, char *line)
+char	*ft_reader(int fd, char *buf, t_list x)
 {
-	int	buf_count;
-
-	buf_count = 0;
 	while (read(fd, buf, BUFFER_SIZE) > 0)
 	{
-		printf("buffertje lekker: %s\n", buf);
-		buf_count = 0;
-		while (buf_count < BUFFER_SIZE)
+		x.buf_count = 0;
+		while (x.buf_count < BUFFER_SIZE)
 		{
-			if (buf[buf_count] == '\n')
+			if (buf[x.buf_count] == '\n')
 			{
-				printf("buf2: %s\n", buf);
-				printf("buf_count2: %d\n", buf_count);
-				line = ft_line_maker(line, buf, buf_count);
-				new_buffer(buf, buf_count);
-				return (line);
+				x.buf_count++;
+				x.line = ft_line_maker(buf, x);
+				new_buffer(buf, x);
+				return (x.line);
 			}
-			buf_count++;
+			x.buf_count++;
 		}
-		printf("buf1: %s\n", buf);
-		printf("buf_count1: %d\n", buf_count);
-		line = ft_line_maker(line, buf, buf_count);
-		// new_buffer(buf, buf_count);
+		x.line = ft_line_maker(buf, x);
+		new_buffer(buf, x);
 	}
-	return (line);
+	if (!*x.line)
+	{
+		free (x.line);
+		return (NULL);
+	}
+	return (x.line);
 }
 
 char	*get_next_line(int fd)
 {
-	static char		buf[BUFFER_SIZE];
-	char			*line;
-	int				buf_count;
+	static char	buf[BUFFER_SIZE];
+	t_list		x;
 
-	line = malloc(sizeof(char) * 1);
-	if (!line)
+	if (fd < 0 || fd > 1024 || read(fd, buf, 0) == -1 || BUFFER_SIZE <= 0)
 		return (NULL);
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	x.line = (char *)malloc(sizeof(char));
+	if (!x.line)
 		return (NULL);
-	line[0] = '\0';
-	buf_count = 0;
-	while (buf_count < BUFFER_SIZE)
+	x.line[0] = '\0';
+	x.buf_count = 0;
+	while (x.buf_count < BUFFER_SIZE)
 	{
-		if (buf[buf_count] == '\n')
+		if (buf[x.buf_count] == '\n')
 		{
-			line = ft_line_maker(line, buf, buf_count);
-			new_buffer(buf, buf_count);
-			return (line);
+			x.buf_count++;
+			x.line = ft_line_maker(buf, x);
+			new_buffer(buf, x);
+			return (x.line);
 		}
-		buf_count++;
+		x.buf_count++;
 	}
-	printf("buf: %s\n", buf);
-	printf("buf_count: %d\n", buf_count);
-	line = ft_line_maker(line, buf, buf_count);
-	return (ft_reader(fd, buf, line));
+	x.line = ft_line_maker(buf, x);
+	new_buffer(buf, x);
+	return (ft_reader(fd, buf, x));
 }
 
-int	main(void)
-{
-	int		fd;
+// int	main(void)
+// {
+// 	int		fd;
 
-	fd = open("test.txt", O_RDONLY);
-	printf("Line 1: %s", get_next_line(fd));
-	printf("Line 2: %s", get_next_line(fd));
-	printf("Line 3: %s", get_next_line(fd));
-	printf("Line 4: %s", get_next_line(fd));
-	// printf("Line 5: %s\n", get_next_line(fd));
-	// printf("Line 6: %s\n", get_next_line(fd));
-	// printf("Line 7: %s\n", get_next_line(fd));
-	// printf("Line 8: %s\n", get_next_line(fd));
-	// printf("Line 9: %s\n", get_next_line(fd));
-	// printf("Line 10: %s\n", get_next_line(fd));
-	return (0);
-}
+// 	fd = open("test.txt", O_RDONLY);
+// 	printf("Line 1: %s\n", get_next_line(fd));
+// 	printf("Line 2: %s\n", get_next_line(fd));
+// 	printf("Line 3: %s\n", get_next_line(fd));
+// 	printf("Line 4: %s\n", get_next_line(fd));
+// 	printf("Line 5: %s\n", get_next_line(fd));
+// 	printf("Line 6: %s\n", get_next_line(fd));
+// 	printf("Line 7: %s\n", get_next_line(fd));
+// 	printf("Line 8: %s\n", get_next_line(fd));
+// 	printf("Line 9: %s\n", get_next_line(fd));
+// 	printf("Line 10: %s\n", get_next_line(fd));
+// 	printf("Line 11: %s\n", get_next_line(fd));
+// 	printf("Line 12: %s\n", get_next_line(fd));
+// 	return (0);
+// }

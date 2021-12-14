@@ -1,55 +1,52 @@
 #include "get_next_line.h"
 
 //adds buffer to the existing line and returns this newline
-char	*ft_line_add_buf(char *line, char *buf, char *newline, int line_count, int buf_count)
+char	*ft_line_add_buf(char *buf, t_list x)
 {
 	int	count;
 	int	count1;
 
 	count = 0;
-	while (count < line_count)
+	while (count < x.line_count)
 	{
-		newline[count] = line[count];
+		x.newline[count] = x.line[count];
 		count++;
 	}
 	count1 = 0;
-	while (count1 < buf_count) //(count1 <= buf_count): If you want to print the newline (\n) aswell
+	while (count1 < x.buf_count)
 	{
-		newline[count] = buf[count1];
+		x.newline[count] = buf[count1];
 		count++;
 		count1++;
 	}
-	newline[count] = '\0';
-	return (newline);
+	x.newline[count] = '\0';
+	return (x.newline);
 }
 
 //allocates memmory for the newline, makes the newline and frees the 'old' line
-char	*ft_line_maker(char *line, char *buf, int buf_count)
+char	*ft_line_maker(char *buf, t_list x)
 {
-	int		line_count;
-	char	*newline;
-
-	line_count = 0;
-	while (line[line_count])
-		line_count++;
-	newline = (char *)malloc((line_count + buf_count + 1) * sizeof(char));
-	if (!newline)
+	x.line_count = 0;
+	while (x.line[x.line_count])
+		x.line_count++;
+	x.newline = (char *)malloc((x.line_count + x.buf_count + 1) * sizeof(char));
+	if (!x.newline)
 		return (NULL);
-	newline = (ft_line_add_buf(line, buf, newline, line_count, buf_count));
-	free (line);
-	return (newline);
+	x.newline = (ft_line_add_buf(buf, x));
+	free (x.line);
+	return (x.newline);
 }
 
-void	new_buffer(char *buf, int buf_count)
+void	new_buffer(char *buf, t_list x)
 {
 	int	i;
 
 	i = 0;
-	while (buf_count < BUFFER_SIZE)
+	while (x.buf_count < BUFFER_SIZE)
 	{
-		buf_count++;
-		buf[i] = buf[buf_count];
+		buf[i] = buf[x.buf_count];
 		i++;
+		x.buf_count++;
 	}
 	while (i < BUFFER_SIZE)
 	{
